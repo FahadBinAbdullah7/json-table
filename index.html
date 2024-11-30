@@ -61,6 +61,7 @@
         <textarea id="jsonData" placeholder="Paste JSON data here..."></textarea>
         <button id="generateTable">Generate Table</button>
         <button id="copyTable" style="display:none;">Copy Table</button>
+        <button id="clearAll" style="display:none;">Clear All</button>
         <div class="select-container">
             <select id="searchBar" multiple></select>
         </div>
@@ -98,10 +99,12 @@
             const tableHead = document.getElementById('tableHead');
             const tableBody = document.getElementById('tableBody');
             const copyTableBtn = document.getElementById('copyTable');
+            const clearAllBtn = document.getElementById('clearAll');
             searchBar.innerHTML = '';
             tableHead.innerHTML = '';
             tableBody.innerHTML = '';
             copyTableBtn.style.display = 'none';
+            clearAllBtn.style.display = 'block';
 
             try {
                 const data = JSON.parse(jsonData);
@@ -211,6 +214,16 @@
             } catch (e) {
                 alert('Invalid JSON data. Please check your input.');
             }
+        });
+
+        // Clear All functionality
+        document.getElementById('clearAll').addEventListener('click', function () {
+            document.getElementById('jsonData').value = '';
+            document.getElementById('searchBar').innerHTML = '';
+            document.getElementById('tableHead').innerHTML = '';
+            document.getElementById('tableBody').innerHTML = '';
+            document.getElementById('copyTable').style.display = 'none';
+            document.getElementById('clearAll').style.display = 'none';
         });
     </script>
 </body>
