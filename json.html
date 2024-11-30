@@ -178,36 +178,33 @@
                     });
                 });
 
-                // Show the "Copy Table" button
-                copyTableBtn.style.display = 'inline-block';
+                // Show the Copy Table button
+                copyTableBtn.style.display = 'block';
 
                 // Copy Table functionality
                 copyTableBtn.addEventListener('click', function () {
-                    let tableText = '';
+                    const selectedKeys = $('#searchBar').val();
+                    const visibleColumns = Array.from(tableHead.querySelectorAll('th'))
+                        .filter((col, index) => selectedKeys.includes(keys[index]))
+                        .map(col => col.textContent);
 
-                    // Add header row to the clipboard content
-                    keys.forEach(key => {
-                        tableText += key + '\t';
-                    });
-                    tableText = tableText.trim() + '\n';
-
-                    // Add each row of the table
-                    const rows = tableBody.querySelectorAll('tr');
-                    rows.forEach(row => {
-                        const cells = row.querySelectorAll('td');
-                        cells.forEach(cell => {
-                            tableText += cell.textContent + '\t';
-                        });
-                        tableText = tableText.trim() + '\n';
+                    const rows = Array.from(tableBody.querySelectorAll('tr')).map(row => {
+                        return Array.from(row.querySelectorAll('td'))
+                            .filter((cell, index) => selectedKeys.includes(keys[index]))
+                            .map(cell => cell.textContent)
+                            .join('\t');
                     });
 
-                    // Copy the table text to clipboard
-                    const textArea = document.createElement('textarea');
-                    textArea.value = tableText;
-                    document.body.appendChild(textArea);
-                    textArea.select();
+                    const tableData = [visibleColumns.join('\t'), ...rows].join('\n');
+
+                    // Create a temporary textarea to copy the table data to clipboard
+                    const textarea = document.createElement('textarea');
+                    textarea.value = tableData;
+                    document.body.appendChild(textarea);
+                    textarea.select();
                     document.execCommand('copy');
-                    document.body.removeChild(textArea);
+                    document.body.removeChild(textarea);
+
                     alert('Table copied to clipboard! You can now paste it into Google Sheets.');
                 });
 
